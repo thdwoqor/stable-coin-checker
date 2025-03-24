@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ class BithumbWebSocketHandler extends TextWebSocketHandler {
 
     private static final int MILLISECOND = 1000;
 
-    private final List<WebSocketSession> sessions = new ArrayList<>();
+    private WebSocketSession sessions;
     private final ApplicationEventPublisher publisher;
     private final JsonUtils jsonUtils;
 
@@ -45,7 +44,7 @@ class BithumbWebSocketHandler extends TextWebSocketHandler {
                                 List.of("24H")
                         )
                 )));
-        sessions.add(session);
+        sessions = session;
     }
 
     @Override
@@ -85,21 +84,20 @@ class BithumbWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(final WebSocketSession session, final CloseStatus status) throws Exception {
-        sessions.remove(session);
+        sessions = null;
     }
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 2000, initialDelay = 2000)
     public void expire() {
-        sessions.forEach(session -> {
-            try {
-                session.sendMessage(new TextMessage("PING"));
-            } catch (IOException e) {
-                log.error("빗썸 웹소켓과 연결이 끊어졌습니다.", e);
-            }
-        });
+        try {
+            sessions.sendMessage(new TextMessage("PING"));
+        } catch (IOException e) {
+            sessions = null;
+            log.error("빗썸 웹소켓과 연결이 끊어졌습니다.", e);
+        }
     }
 
     public boolean isNotConnected() {
-        return sessions.isEmpty();
+        return sessions == null;
     }
 }

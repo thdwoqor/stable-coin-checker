@@ -58,4 +58,18 @@ public class CandlestickId implements Serializable {
         return Instant.ofEpochMilli(timestamp - (timestamp % (second * 1000L)) + (second * 1000L))
                 .truncatedTo(ChronoUnit.MINUTES).toEpochMilli();
     }
+
+    public String serialized() {
+        return String.join(",", cryptoExchange.name(), symbol, timeInterval.name(), timestamp.toString());
+    }
+
+    public static CandlestickId deserialized(final String id) {
+        String[] split = id.split(",");
+        return new CandlestickId(
+                CryptoExchange.valueOf(split[0]),
+                split[1],
+                TimeInterval.valueOf(split[2]),
+                Long.parseLong(split[3])
+        );
+    }
 }

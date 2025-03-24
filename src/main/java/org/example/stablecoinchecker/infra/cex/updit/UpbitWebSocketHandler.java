@@ -2,7 +2,6 @@ package org.example.stablecoinchecker.infra.cex.updit;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,9 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 @RequiredArgsConstructor
 public class UpbitWebSocketHandler extends BinaryWebSocketHandler {
 
-    private final List<WebSocketSession> sessions = new ArrayList<>();
     private final ApplicationEventPublisher publisher;
     private final JsonUtils jsonUtils;
+    private WebSocketSession sessions;
 
     @Override
     public void afterConnectionEstablished(final WebSocketSession session) throws IOException {
@@ -38,7 +37,7 @@ public class UpbitWebSocketHandler extends BinaryWebSocketHandler {
                         new UpbitWebSocketRequest("ticker", List.of("KRW-USDT", "KRW-BTC"))
                 )
         )));
-        sessions.add(session);
+        sessions = session;
     }
 
     @Override
@@ -68,21 +67,20 @@ public class UpbitWebSocketHandler extends BinaryWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(final WebSocketSession session, final CloseStatus status) throws Exception {
-        sessions.remove(session);
+        sessions = null;
     }
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 2000, initialDelay = 2000)
     public void expire() {
-        sessions.forEach(session -> {
-            try {
-                session.sendMessage(new TextMessage("PING"));
-            } catch (IOException e) {
-                log.error("업비트 웹소켓과 연결이 끊어졌습니다.", e);
-            }
-        });
+        try {
+            sessions.sendMessage(new TextMessage("PING"));
+        } catch (Exception e) {
+            log.error("업비트 웹소켓과 연결이 끊어졌습니다.", e);
+            sessions = null;
+        }
     }
 
     public boolean isNotConnected() {
-        return sessions.isEmpty();
+        return sessions == null;
     }
 }

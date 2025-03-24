@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     //resilience4j
     implementation "io.github.resilience4j:resilience4j-spring-boot3"
     implementation "org.springframework.boot:spring-boot-starter-aop"

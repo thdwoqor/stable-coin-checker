@@ -43,6 +43,16 @@ public class Candlestick {
         return new Candlestick(candlestickId, price, price, price, price);
     }
 
+    public static Candlestick create(
+            final CandlestickId candlestickId,
+            final BigDecimal open,
+            final BigDecimal close,
+            final BigDecimal high,
+            final BigDecimal low
+    ) {
+        return new Candlestick(candlestickId, open, close, high, low);
+    }
+
     public void update(final BigDecimal price) {
         this.close = price;
         if (price.compareTo(low) < 0) {

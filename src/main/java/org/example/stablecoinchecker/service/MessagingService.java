@@ -18,19 +18,19 @@ public class MessagingService {
     private final ExchangeRateUpdateService exchangeRateUpdateService;
     private final StableCoinRequester stableCoinRequester;
 
-    @Scheduled(cron = "${schedule.cron}")
-    @SchedulerLock(
-            name = "scheduledSendMessageTask",
-            lockAtLeastFor = "4m",
-            lockAtMostFor = "4m"
-    )
-    public void sendMessage() {
-        ExchangeRate exchangeRate = exchangeRateUpdateService.updateExchangeRate();
-        List<StableCoin> stableCoins = stableCoinRequester.getStableCoins();
-
-        Message message = Message.create(stableCoins, exchangeRate);
-
-        messagingServiceProvider.sendMessage(message.getMessage());
-    }
+//    @Scheduled(cron = "${schedule.cron}")
+//    @SchedulerLock(
+//            name = "scheduledSendMessageTask",
+//            lockAtLeastFor = "4m",
+//            lockAtMostFor = "4m"
+//    )
+//    public void sendMessage() {
+//        ExchangeRate exchangeRate = exchangeRateUpdateService.updateExchangeRate();
+//        List<StableCoin> stableCoins = stableCoinRequester.getStableCoins();
+//
+//        Message message = Message.create(stableCoins, exchangeRate);
+//
+//        messagingServiceProvider.sendMessage(message.getMessage());
+//    }
 
 }

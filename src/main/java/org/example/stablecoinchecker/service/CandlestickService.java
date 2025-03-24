@@ -22,7 +22,7 @@ public class CandlestickService {
         template.executeWithNamedLock(
                 event.identifier() + event.symbol(),
                 FIVE_SECONDS,
-                () -> CandlestickGenerator.candleStickGeneration(event)
+                () -> CandlestickGenerator.generateCandlesticks(event)
         );
     }
 

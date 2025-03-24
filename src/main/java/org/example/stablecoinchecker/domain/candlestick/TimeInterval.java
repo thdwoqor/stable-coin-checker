@@ -10,10 +10,6 @@ public enum TimeInterval {
     MIN5(60 * 5),
     MIN15(60 * 15),
     MIN30(60 * 30),
-    HOUR1(60 * 60),
-    HOUR4(60 * 60 * 4),
-    DAY1(60 * 60 * 24),
-    WEEK1(60 * 60 * 24 * 7),
     ;
 
     private int second;
