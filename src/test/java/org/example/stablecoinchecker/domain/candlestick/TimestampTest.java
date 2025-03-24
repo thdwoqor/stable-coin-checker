@@ -1,6 +1,8 @@
 package org.example.stablecoinchecker.domain.candlestick;
 
 import org.assertj.core.api.Assertions;
+import org.example.stablecoinchecker.chart.domain.TimeInterval;
+import org.example.stablecoinchecker.chart.domain.Timestamp;
 import org.junit.jupiter.api.Test;
 
 class TimestampTest {

@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.example.stablecoinchecker.TestConfig;
-import org.example.stablecoinchecker.domain.candlestick.Candlestick;
-import org.example.stablecoinchecker.domain.candlestick.CandlestickId;
-import org.example.stablecoinchecker.domain.candlestick.CandlestickRepository;
-import org.example.stablecoinchecker.domain.candlestick.CryptoExchange;
-import org.example.stablecoinchecker.domain.candlestick.Symbol;
-import org.example.stablecoinchecker.domain.candlestick.TimeInterval;
-import org.example.stablecoinchecker.infra.cex.CryptoExchangeTickerEvent;
+import org.example.stablecoinchecker.chart.application.CandlestickService;
+import org.example.stablecoinchecker.chart.domain.Candlestick;
+import org.example.stablecoinchecker.chart.domain.CandlestickId;
+import org.example.stablecoinchecker.chart.domain.CandlestickRepository;
+import org.example.stablecoinchecker.chart.domain.CryptoExchange;
+import org.example.stablecoinchecker.chart.domain.TimeInterval;
+import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangeTickerEvent;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +72,10 @@ class CandlestickServiceTest {
 
         //then
         Candlestick candlestick1 = candlestickRepository.findById(
-                CandlestickId.from(CryptoExchange.BITHUMB, Symbol.USDT.name(), TimeInterval.MIN1, 1731045875583L)
+                CandlestickId.from(CryptoExchange.BITHUMB, "USDT", TimeInterval.MIN1, 1731045875583L)
         ).orElseThrow();
         Candlestick candlestick2 = candlestickRepository.findById(
-                CandlestickId.from(CryptoExchange.BITHUMB, Symbol.USDT.name(), TimeInterval.MIN1, 1731045905583L)
+                CandlestickId.from(CryptoExchange.BITHUMB, "USDT", TimeInterval.MIN1, 1731045905583L)
         ).orElseThrow();
 
         SoftAssertions.assertSoftly(softly -> {

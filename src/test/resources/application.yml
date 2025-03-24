@@ -13,6 +13,10 @@ spring:
         use_sql_comments: false
   lifecycle:
     timeout-per-shutdown-phase: 4m
+  data:
+    redis:
+      host: localhost
+      port: 6379
 logging:
   level:
     org.hibernate.SQL: debug
