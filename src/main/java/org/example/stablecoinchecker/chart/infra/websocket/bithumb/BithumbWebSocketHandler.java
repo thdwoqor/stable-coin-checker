@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangeTickerEvent;
+import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangePriceEvent;
 import org.example.stablecoinchecker.scheduler.infra.cex.JsonUtils;
 import org.example.stablecoinchecker.chart.infra.websocket.bithumb.dto.BithumbWebSocketRequest;
 import org.example.stablecoinchecker.chart.infra.websocket.bithumb.dto.BithumbWebSocketResponse;
@@ -57,7 +57,7 @@ class BithumbWebSocketHandler extends TextWebSocketHandler {
         Content content = response.getContent();
         if (validate(content)) {
             publisher.publishEvent(
-                    new CryptoExchangeTickerEvent(
+                    new CryptoExchangePriceEvent(
                             "BITHUMB",
                             content.getSymbol().split("_")[0],
                             content.getClosePrice(),
@@ -91,7 +91,7 @@ class BithumbWebSocketHandler extends TextWebSocketHandler {
     public void expire() {
         try {
             sessions.sendMessage(new TextMessage("PING"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             sessions = null;
             log.error("빗썸 웹소켓과 연결이 끊어졌습니다.", e);
         }

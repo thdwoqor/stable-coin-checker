@@ -3,7 +3,7 @@ package org.example.stablecoinchecker.scheduler.infra.cex;
 import java.math.BigDecimal;
 
 
-public record CryptoExchangeTickerEvent(
+public record CryptoExchangePriceEvent(
         String identifier,
         String symbol,
         BigDecimal price,

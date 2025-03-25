@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangeTickerEvent;
+import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangePriceEvent;
 import org.example.stablecoinchecker.scheduler.infra.cex.JsonUtils;
 import org.example.stablecoinchecker.scheduler.infra.cex.updit.dto.UpbitTicketRequest;
 import org.example.stablecoinchecker.chart.infra.websocket.upbit.dto.UpbitWebSocketRequest;
@@ -49,7 +49,7 @@ public class UpbitWebSocketHandler extends BinaryWebSocketHandler {
     private void dispatchTickerEvent(final UpbitWebSocketResponse response) {
         if (validate(response)) {
             publisher.publishEvent(
-                    new CryptoExchangeTickerEvent(
+                    new CryptoExchangePriceEvent(
                             "UPBIT",
                             response.getCode().split("-")[1],
                             response.getTradePrice(),

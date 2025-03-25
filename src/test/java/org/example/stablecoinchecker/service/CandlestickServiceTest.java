@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.example.stablecoinchecker.TestConfig;
-import org.example.stablecoinchecker.chart.application.CandlestickService;
+import org.example.stablecoinchecker.chart.application.ActiveCandlestickGenerator;
 import org.example.stablecoinchecker.chart.domain.Candlestick;
 import org.example.stablecoinchecker.chart.domain.CandlestickId;
 import org.example.stablecoinchecker.chart.domain.CandlestickRepository;
 import org.example.stablecoinchecker.chart.domain.CryptoExchange;
 import org.example.stablecoinchecker.chart.domain.TimeInterval;
-import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangeTickerEvent;
+import org.example.stablecoinchecker.scheduler.infra.cex.CryptoExchangePriceEvent;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.test.context.TestPropertySource;
 class CandlestickServiceTest {
 
     @Autowired
-    private CandlestickService candlestickService;
+    private ActiveCandlestickGenerator candlestickService;
     @Autowired
     private CandlestickRepository candlestickRepository;
 
@@ -32,32 +32,32 @@ class CandlestickServiceTest {
     @Disabled
     void 캔들스택을_생성할_수_있다() {
         //given
-        List<CryptoExchangeTickerEvent> events = List.of(
-                new CryptoExchangeTickerEvent(
+        List<CryptoExchangePriceEvent> events = List.of(
+                new CryptoExchangePriceEvent(
                         "BITHUMB",
                         "USDT",
                         new BigDecimal(1100),
                         1731045875583L
                 ),
-                new CryptoExchangeTickerEvent(
+                new CryptoExchangePriceEvent(
                         "BITHUMB",
                         "USDT",
                         new BigDecimal(1200),
                         1731045885583L
                 ),
-                new CryptoExchangeTickerEvent(
+                new CryptoExchangePriceEvent(
                         "BITHUMB",
                         "USDT",
                         new BigDecimal(1000),
                         1731045895583L
                 ),
-                new CryptoExchangeTickerEvent(
+                new CryptoExchangePriceEvent(
                         "BITHUMB",
                         "USDT",
                         new BigDecimal(1500),
                         1731045905583L
                 ),
-                new CryptoExchangeTickerEvent(
+                new CryptoExchangePriceEvent(
                         "BITHUMB",
                         "USDT",
                         new BigDecimal(1400),
@@ -66,8 +66,8 @@ class CandlestickServiceTest {
         );
 
         //when
-        for (CryptoExchangeTickerEvent event : events) {
-            candlestickService.candleStickGeneration(event);
+        for (CryptoExchangePriceEvent event : events) {
+            candlestickService.consumePriceEvent(event);
         }
 
         //then
