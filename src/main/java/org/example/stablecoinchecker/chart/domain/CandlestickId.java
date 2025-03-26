@@ -4,8 +4,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,5 +63,20 @@ public class CandlestickId implements Serializable {
                 TimeInterval.valueOf(split[2]),
                 Long.parseLong(split[3])
         );
+    }
+
+    public boolean isSameChart(
+            final String cryptoExchange,
+            final String symbol,
+            final String timeInterval
+    ) {
+        if (
+                this.cryptoExchange.toString().equals(cryptoExchange) &&
+                        this.symbol.equals(symbol) &&
+                        this.timeInterval.toString().equals(timeInterval)
+        ) {
+            return true;
+        }
+        return false;
     }
 }

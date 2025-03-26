@@ -35,13 +35,6 @@ public class Candlestick {
         this.low = low;
     }
 
-    public static Candlestick createNew(
-            final CandlestickId candlestickId,
-            final BigDecimal price
-    ) {
-        return new Candlestick(candlestickId, price, price, price, price);
-    }
-
     public static Candlestick create(
             final CandlestickId candlestickId,
             final BigDecimal open,

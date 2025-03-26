@@ -18,6 +18,11 @@ public class CandlestickScheduler {
     private final ActiveCandlestickRepository activeCandlestickRepository;
     private final CandlestickRepository candlestickRepository;
 
+    /*
+        비활성 상태의 캔들을 영구 저장하는 스케줄러
+        예: 5분봉 차트를 생성할 때, 현재 시간이 1시 11분이라면 1시 10분까지의 캔들은 이미 완성된 상태입니다.
+        따라서 이들은 '비활성 캔들'로 간주되어 영구 저장 대상이 됩니다.
+     */
     @Scheduled(cron = "3 */5 * * * *")
     public void batchCandleData() {
         List<ActiveCandlestick> activeCandlesticks = activeCandlestickRepository.findAll();
