@@ -51,32 +51,22 @@ public class CandlestickId implements Serializable {
         );
     }
 
-    public String serialized() {
-        return String.join(",", cryptoExchange.name(), symbol, timeInterval.name(), timestamp.toString());
-    }
+    public static CandlestickId from(
+            final String value
+    ) {
+        String[] parts = value.split(":");
 
-    public static CandlestickId deserialized(final String id) {
-        String[] split = id.split(",");
+        CryptoExchange exchange = CryptoExchange.from(parts[0]);
+        String symbol = parts[1];
+        TimeInterval interval = TimeInterval.valueOf(parts[2]);
+        long timestamp = Long.parseLong(parts[3]);
+
         return new CandlestickId(
-                CryptoExchange.valueOf(split[0]),
-                split[1],
-                TimeInterval.valueOf(split[2]),
-                Long.parseLong(split[3])
+                exchange,
+                symbol,
+                interval,
+                TimeInterval.calculateTimestamp(interval, timestamp)
         );
     }
 
-    public boolean isSameChart(
-            final String cryptoExchange,
-            final String symbol,
-            final String timeInterval
-    ) {
-        if (
-                this.cryptoExchange.toString().equals(cryptoExchange) &&
-                        this.symbol.equals(symbol) &&
-                        this.timeInterval.toString().equals(timeInterval)
-        ) {
-            return true;
-        }
-        return false;
-    }
 }

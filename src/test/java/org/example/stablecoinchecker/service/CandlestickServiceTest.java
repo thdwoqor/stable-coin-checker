@@ -3,7 +3,6 @@ package org.example.stablecoinchecker.service;
 import java.math.BigDecimal;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
-import org.example.stablecoinchecker.TestConfig;
 import org.example.stablecoinchecker.chart.application.ActiveCandlestickGenerator;
 import org.example.stablecoinchecker.chart.domain.Candlestick;
 import org.example.stablecoinchecker.chart.domain.CandlestickId;
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
-@Import(TestConfig.class)
 @TestPropertySource(properties = {"app.scheduling.enable=false"})
 class CandlestickServiceTest {
 
