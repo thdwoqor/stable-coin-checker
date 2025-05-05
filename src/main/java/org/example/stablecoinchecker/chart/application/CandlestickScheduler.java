@@ -26,7 +26,7 @@ public class CandlestickScheduler {
         예: 5분봉 차트를 생성할 때, 현재 시간이 1시 11분이라면 1시 05분까지의 캔들은 이미 완성된 상태입니다.
         따라서 이들은 '비활성 캔들'로 간주되어 영구 저장 대상이 됩니다.
      */
-    @Scheduled(cron = "5 * * * * *")
+    @Scheduled(cron = "5 */5 * * * *")
     public void batchCandleData() {
         long now = Instant.now().toEpochMilli();
         ZSetOperations<String, String> indexOps = indexRedisTemplate.opsForZSet();
