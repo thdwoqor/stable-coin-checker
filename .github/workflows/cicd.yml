@@ -5,6 +5,9 @@ on:
     branches:
       - prod
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -13,6 +16,7 @@ jobs:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v4.1.1
         with:
+          fetch-depth: 3
           token: ${{ secrets.SUBMODULE_TOKEN }}
           submodules: true
       - run: git log --pretty=oneline
