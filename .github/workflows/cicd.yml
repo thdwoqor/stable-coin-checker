@@ -16,9 +16,10 @@ jobs:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.SUBMODULE_TOKEN }}
-          submodules: true
+          fetch-depth: 0
+          clean: true
+          submodules: recursive
 
       - name: JDK 17을 설치합니다.
         uses: actions/setup-java@v3
@@ -32,8 +33,7 @@ jobs:
       - name: Gradle을 통해 빌드합니다.
         run: ./gradlew build
 
-      - name: 빌드 파일 deploy 파일로 이동
-        shell: bash
+      - name: 빌드 파일 deploy 디렉터리로 복사
         run: |
           rm -f /home/thdwoqor/deploy/*.jar
           cp build/libs/*.jar /home/thdwoqor/deploy/
