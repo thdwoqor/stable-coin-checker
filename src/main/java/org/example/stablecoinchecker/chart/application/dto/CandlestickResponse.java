@@ -17,7 +17,7 @@ public record CandlestickResponse(
                 candlestick.getClose().setScale(2),
                 candlestick.getHigh().setScale(2),
                 candlestick.getLow().setScale(2),
-                candlestick.getCandlestickId().getTimestamp()
+                candlestick.getIdentifier().getTimestamp()
         );
     }
 }

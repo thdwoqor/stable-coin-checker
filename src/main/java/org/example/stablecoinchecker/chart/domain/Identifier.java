@@ -3,20 +3,16 @@ package org.example.stablecoinchecker.chart.domain;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import java.io.Serializable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
-@Setter
-@ToString
 @Embeddable
 @EqualsAndHashCode
 @NoArgsConstructor
-public class CandlestickId implements Serializable {
+public class Identifier {
 
     @Enumerated(value = EnumType.STRING)
     private CryptoExchange cryptoExchange;
@@ -25,7 +21,7 @@ public class CandlestickId implements Serializable {
     private TimeInterval timeInterval;
     private Long timestamp;
 
-    private CandlestickId(
+    private Identifier(
             final CryptoExchange cryptoExchange,
             final String symbol,
             final TimeInterval timeInterval,
@@ -37,13 +33,13 @@ public class CandlestickId implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public static CandlestickId from(
+    public static Identifier from(
             final CryptoExchange cryptoExchange,
             final String symbol,
             final TimeInterval timeInterval,
             final Long timestamp
     ) {
-        return new CandlestickId(
+        return new Identifier(
                 cryptoExchange,
                 symbol,
                 timeInterval,
@@ -51,22 +47,14 @@ public class CandlestickId implements Serializable {
         );
     }
 
-    public static CandlestickId from(
-            final String value
+    public boolean isSameAs(
+            final CryptoExchange cryptoExchange,
+            final String symbol,
+            final TimeInterval timeInterval
     ) {
-        String[] parts = value.split(":");
-
-        CryptoExchange exchange = CryptoExchange.from(parts[0]);
-        String symbol = parts[1];
-        TimeInterval interval = TimeInterval.valueOf(parts[2]);
-        long timestamp = Long.parseLong(parts[3]);
-
-        return new CandlestickId(
-                exchange,
-                symbol,
-                interval,
-                TimeInterval.calculateTimestamp(interval, timestamp)
-        );
+        return this.cryptoExchange.equals(cryptoExchange) &&
+                this.symbol.equals(symbol) &&
+                this.timeInterval.equals(timeInterval);
     }
 
 }

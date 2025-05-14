@@ -1,15 +1,16 @@
 package org.example.stablecoinchecker.global.config;
 
 import java.math.BigDecimal;
+import org.example.stablecoinchecker.chart.domain.Identifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -28,18 +29,35 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, BigDecimal> priceRedisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, BigDecimal> template = new RedisTemplate<>();
+    public RedisTemplate<Identifier, BigDecimal> priceRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<Identifier, BigDecimal> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
-        template.setKeySerializer(new StringRedisSerializer());
+
+        Jackson2JsonRedisSerializer<Identifier> keySerializer =
+                new Jackson2JsonRedisSerializer<>(Identifier.class);
+
+        template.setKeySerializer(keySerializer);
+
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
         template.afterPropertiesSet();
         return template;
     }
 
     @Bean
-    public RedisTemplate<String, String> indexRedisTemplate(RedisConnectionFactory factory) {
-        return new StringRedisTemplate(factory);
+    public RedisTemplate<String, Identifier> indexRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Identifier> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+
+        template.setKeySerializer(new StringRedisSerializer());
+
+        Jackson2JsonRedisSerializer<Identifier> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(Identifier.class);
+
+        template.setValueSerializer(valueSerializer);
+
+        template.afterPropertiesSet();
+        return template;
     }
 
 }

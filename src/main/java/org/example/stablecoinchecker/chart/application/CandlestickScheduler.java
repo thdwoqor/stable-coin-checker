@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.stablecoinchecker.chart.domain.Candlestick;
-import org.example.stablecoinchecker.chart.domain.CandlestickId;
 import org.example.stablecoinchecker.chart.domain.CandlestickRepository;
+import org.example.stablecoinchecker.chart.domain.Identifier;
 import org.example.stablecoinchecker.chart.domain.TimeInterval;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CandlestickScheduler {
 
-    private final RedisTemplate<String, BigDecimal> priceRedisTemplate;
-    private final RedisTemplate<String, String> indexRedisTemplate;
+    private final RedisTemplate<Identifier, BigDecimal> priceRedisTemplate;
+    private final RedisTemplate<String, Identifier> indexRedisTemplate;
     private final CandlestickRepository candlestickRepository;
 
     /*
@@ -29,35 +29,31 @@ public class CandlestickScheduler {
     @Scheduled(cron = "5 */5 * * * *")
     public void batchCandleData() {
         long now = Instant.now().toEpochMilli();
-        ZSetOperations<String, String> indexOps = indexRedisTemplate.opsForZSet();
+        ZSetOperations<String, Identifier> indexOps = indexRedisTemplate.opsForZSet();
 
-        Set<String> keys = indexOps.rangeByScore("index", 0, now);
+        Set<Identifier> identifiers = indexOps.rangeByScore("index", 0, now);
 
-        for (String key : keys) {
-            String[] parts = key.split(":");
-            TimeInterval interval = TimeInterval.valueOf(parts[2]);
-            long timestamp = Long.parseLong(parts[3]);
-
-            if (!isComplete(timestamp, interval, now)) {
+        for (Identifier identifier : identifiers) {
+            if (!isComplete(identifier, now)) {
                 continue;
             }
 
-            Set<BigDecimal> prices = priceRedisTemplate.opsForZSet().range(key, 0, -1);
+            Set<BigDecimal> prices = priceRedisTemplate.opsForZSet().range(identifier, 0, -1);
             if (prices == null || prices.isEmpty()) {
                 continue;
             }
 
-            Candlestick candlestick = Candlestick.create(CandlestickId.from(key), prices);
+            Candlestick candlestick = Candlestick.create(identifier, prices);
             candlestickRepository.save(candlestick);
 
-            priceRedisTemplate.delete(key);
-            indexOps.remove("index", key);
+            priceRedisTemplate.delete(identifier);
+            indexOps.remove("index", identifier);
         }
     }
 
-    private boolean isComplete(long windowStart, TimeInterval interval, long now) {
-        long currentWindow = TimeInterval.calculateTimestamp(interval, now);
-        if (windowStart == currentWindow) {
+    private boolean isComplete(final Identifier identifier, long now) {
+        long currentWindow = TimeInterval.calculateTimestamp(identifier.getTimeInterval(), now);
+        if (identifier.getTimestamp() == currentWindow) {
             return false;
         }
         return true;

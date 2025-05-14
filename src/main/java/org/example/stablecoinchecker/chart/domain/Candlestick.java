@@ -1,7 +1,11 @@
 package org.example.stablecoinchecker.chart.domain;
 
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -12,25 +16,28 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "candlestick2")
+@Table(name = "candlestick")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Candlestick {
 
-    @EmbeddedId
-    private CandlestickId candlestickId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(value = EnumType.STRING)
+    private Identifier identifier;
     private BigDecimal open;
     private BigDecimal close;
     private BigDecimal high;
     private BigDecimal low;
 
     private Candlestick(
-            final CandlestickId candlestickId,
+            final Identifier identifier,
             final BigDecimal open,
             final BigDecimal close,
             final BigDecimal high,
             final BigDecimal low
     ) {
-        this.candlestickId = candlestickId;
+        this.identifier = identifier;
         this.open = open;
         this.close = close;
         this.high = high;
@@ -38,25 +45,25 @@ public class Candlestick {
     }
 
     public static Candlestick create(
-            final CandlestickId candlestickId,
+            final Identifier identifier,
             final BigDecimal open
     ) {
-        return new Candlestick(candlestickId, open, open, open, open);
+        return new Candlestick(identifier, open, open, open, open);
     }
 
     public static Candlestick create(
-            final CandlestickId candlestickId,
+            final Identifier identifier,
             final Set<BigDecimal> prices
     ) {
         Iterator<BigDecimal> it = prices.iterator();
         BigDecimal first = it.next();
-        Candlestick cs = Candlestick.create(candlestickId, first);
+        Candlestick newCandlestick = Candlestick.create(identifier, first);
 
         while (it.hasNext()) {
-            cs.update(it.next());
+            newCandlestick.update(it.next());
         }
 
-        return cs;
+        return newCandlestick;
     }
 
     public void update(final BigDecimal price) {

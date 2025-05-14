@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface CandlestickRepository extends JpaRepository<Candlestick, CandlestickId> {
+public interface CandlestickRepository extends JpaRepository<Candlestick, Long> {
 
-    @Query(value = "SELECT * FROM candlestick2 c " +
+    @Query(value = "SELECT * FROM candlestick c " +
             "WHERE c.crypto_exchange = :cryptoExchange " +
             "AND c.symbol = :symbol " +
             "AND c.time_interval = :timeInterval " +

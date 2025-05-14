@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 
 public record CryptoExchangePriceEvent(
-        String identifier,
+        String cryptoExchange,
         String symbol,
         BigDecimal price,
         Long timestamp
