@@ -42,4 +42,4 @@ jobs:
         shell: bash {0}
         run: |
           cd /home/thdwoqor/deploy
-          sudo sh deploy.sh
+          sh deploy.sh
