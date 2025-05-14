@@ -39,6 +39,7 @@ jobs:
           cp build/libs/*.jar /home/thdwoqor/deploy/
 
       - name: 배포 스크립트 실행
+        shell: bash {0}
         run: |
           cd /home/thdwoqor/deploy
-          sh deploy.sh
+          sudo sh deploy.sh
