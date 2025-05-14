@@ -31,4 +31,10 @@ public class ChartController {
                 cryptoExchange, symbol, interval, endTime, limit
         ));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(
+    ) {
+        return ResponseEntity.ok("test");
+    }
 }
