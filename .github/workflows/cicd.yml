@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 3
           token: ${{ secrets.SUBMODULE_TOKEN }}
-          submodules: recursive
+          submodules: true
       - run: git log --pretty=oneline
 
       - name: JDK 17을 설치합니다.
