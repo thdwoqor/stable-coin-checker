@@ -13,6 +13,7 @@ import org.example.stablecoinchecker.scheduler.infra.cex.JsonUtils;
 import org.example.stablecoinchecker.chart.infra.websocket.bithumb.dto.BithumbWebSocketRequest;
 import org.example.stablecoinchecker.chart.infra.websocket.bithumb.dto.BithumbWebSocketResponse;
 import org.example.stablecoinchecker.chart.infra.websocket.bithumb.dto.Content;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Getter
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        prefix = "application.runner",
+        value = "enabled",
+        havingValue = "true")
 class BithumbWebSocketHandler extends TextWebSocketHandler {
 
     private static final int MILLISECOND = 1000;
